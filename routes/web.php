@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Route::get('hello', function () {
-//    return view('welcomes');
-//});
-
-//Route::get('/hello', 'HelloController@show');
+Route::get('/', function () {
+    //echo env('APP_URL');
+    return view('welcome');
+});
