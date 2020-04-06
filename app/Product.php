@@ -1,13 +1,13 @@
 <?php
 
 namespace App;
-
+use App\Transformers\ProductTransformer;
 use Illuminate\Database\Eloquent\{Model,SoftDeletes};
 
 class Product extends Model
 {
     use SoftDeletes;
-    
+    public $transformer = ProductTransformer::class;    
     const AVAILABLE_PRODUCT = 'available';
     const UNAVAILABLE_PRODUCT = 'unavailable';    
     protected $dates = ['deleted_at'];    
