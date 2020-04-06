@@ -7,8 +7,13 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use App\Events\UserCreatedEvent;
 use App\Events\ConfirmEmailEvent;
+use App\Transformers\UserTransformer;
 class UserController extends ApiController
 {
+    public function __construct() {
+        parent::__construct();
+        $this->middleware('transform.input:' . UserTransformer::class)->only(['store','update']);
+    }
     /**
      * Display a listing of the resource.
      *
