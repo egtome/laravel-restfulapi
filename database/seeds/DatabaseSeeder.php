@@ -16,12 +16,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        
         //Delete all data in tables before running
         User::truncate();
         Category::truncate();
         Product::truncate();
         Transaction::truncate();
         DB::table('category_product')->truncate();
+        
+        //Avoid running event listeners (avoid send emails....)
+        User::flushEventListeners();
+        Category::flushEventListeners();
+        Product::flushEventListeners();
+        Transaction::flushEventListeners();        
         
         factory(User::class,100)->create();
         factory(Category::class,50)->create();

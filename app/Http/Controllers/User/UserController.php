@@ -5,7 +5,8 @@ namespace App\Http\Controllers\User;
 use App\User;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-
+use App\Events\UserCreatedEvent;
+use App\Events\ConfirmEmailEvent;
 class UserController extends ApiController
 {
     /**
@@ -42,6 +43,10 @@ class UserController extends ApiController
         $data['admin'] = User::REGULAR_USER;
         
         $user = User::create($data);
+        
+        //Trigger event
+        event(new UserCreatedEvent($user));
+        //Return data
         return $this->showOne($user,201);
     }
 
@@ -67,6 +72,7 @@ class UserController extends ApiController
      */
     public function update(Request $request, User $user)
     {
+        $updatedEmail = false;
         //$user = User::findOrFail($id);
         $rules = [
             'name' => 'min:4',
@@ -84,6 +90,7 @@ class UserController extends ApiController
             $user->verified = User::UNVERIFIED_USER;
             $user->verification_token = User::generateVerification();
             $user->email = $request->email;
+            $updatedEmail = true;
         }
         
         if($request->has('password')){
@@ -103,6 +110,10 @@ class UserController extends ApiController
         }
         
         $user->save();
+        if($updatedEmail){
+            //Trigger event
+            event(new ConfirmEmailEvent($user)); 
+        }
         return $this->showOne($user);
     }
 
@@ -117,5 +128,23 @@ class UserController extends ApiController
         //$user = User::findOrFail($id);
         $user->delete();
         return response()->json(['data',$user],200);
+    }
+    
+    public function verify($token){
+        $user = User::where('verification_token',$token)->firstOrFail();
+        $user->verified = User::VERIFIED_USER;
+        $user->verification_token = null;
+        $user->save();
+        return $this->showMessage('User account verified');
+    }
+    
+    public function resend(User $user){
+        if($user->isVerified()){
+            return $this->errorResponse('User email already verified', 409);
+        }
+        
+        //Trigger event
+        event(new ConfirmEmailEvent($user));         
+        return $this->showMessage('Verification email has been sent');
     }
 }
