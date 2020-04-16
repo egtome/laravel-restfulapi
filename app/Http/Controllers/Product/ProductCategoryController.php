@@ -10,8 +10,11 @@ class ProductCategoryController extends ApiController
 {
     public function __construct() 
     {
+        //parent::__construct();
         $this->middleware('client.credentials')->only(['index']);
         $this->middleware('auth:api')->except(['index']);
+        $this->middleware('scope:manage-products')->except(['index']);  
+        $this->middleware('scope:read-general')->only(['index']);        
     }     
     /**
      * Display a listing of the resource.

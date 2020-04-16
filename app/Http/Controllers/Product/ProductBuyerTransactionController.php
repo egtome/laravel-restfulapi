@@ -12,7 +12,9 @@ class ProductBuyerTransactionController extends ApiController
 {
     public function __construct() {
         parent::__construct();
-        $this->middleware('transform.input:' . TransactionTransformer::class)->only(['store']);      
+        $this->middleware('transform.input:' . TransactionTransformer::class)->only(['store']);
+        $this->middleware('scope:purchase-products')->only(['store']);
+        $this->middleware('can:purchase,buyer')->only(['store']);        
     }        
     /**
      * Store a newly created resource in storage.

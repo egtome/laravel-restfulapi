@@ -13,6 +13,7 @@ class CategoryController extends ApiController
         $this->middleware('client.credentials')->only(['index','show']);
         $this->middleware('auth:api')->except(['index','show']);
         $this->middleware('transform.input:' . CategoryTransformer::class)->only(['store','update']);
+        $this->middleware('scope:read-general')->only(['index','show']); 
     }            
     /**
      * Display a listing of the resource.
