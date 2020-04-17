@@ -18,6 +18,8 @@ class SellerBuyerController extends ApiController
      */
     public function index(Seller $seller)
     {
+        $this->adminOrDie();        
+        
         $buyers = $seller->products()
             ->whereHAs('transactions')
             ->with('transactions.buyer')

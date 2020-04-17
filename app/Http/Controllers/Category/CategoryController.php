@@ -35,6 +35,8 @@ class CategoryController extends ApiController
      */
     public function store(Request $request,Category $category)
     {
+        $this->adminOrDie();
+        
         $rules = [
             'name' => 'required|min:5',
             'description' => 'required|min:5',
@@ -66,6 +68,8 @@ class CategoryController extends ApiController
      */
     public function update(Request $request, Category $category)
     {
+        $this->adminOrDie();
+        
         $rules = [
             'name' => 'min:5',
             'description' => 'min:5',
@@ -88,6 +92,8 @@ class CategoryController extends ApiController
      */
     public function destroy(Category $category)
     {
+        $this->adminOrDie();
+        
         $category->delete();
         return $this->showOne($category);
     }

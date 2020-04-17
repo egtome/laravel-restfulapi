@@ -19,6 +19,8 @@ class CategoryBuyerController extends ApiController
      */
     public function index(Category $category)
     {
+        $this->adminOrDie();        
+        
         $buyers = $category->products()
                 ->whereHas('transactions')
                 ->with('transactions.buyer')

@@ -5,10 +5,11 @@ namespace App\Policies;
 use App\Buyer;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-
+use Illuminate\Auth\Access\Response;
+use App\Traits\AdminPrivileges;
 class BuyerPolicy
 {
-    use HandlesAuthorization;
+    use HandlesAuthorization, AdminPrivileges;
     /**
      * Determine whether the user can view the model.
      *
@@ -18,7 +19,9 @@ class BuyerPolicy
      */
     public function view(User $user, Buyer $buyer)
     {
-        return $user->id === $buyer->id;
+        return $user->id === $buyer->id
+                ? Response::allow()
+                : Response::deny();         
     }
     
     /**

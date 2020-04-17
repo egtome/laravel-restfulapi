@@ -11,7 +11,6 @@ class BuyerCategoryController extends ApiController
     public function __construct() {
         parent::__construct();
         $this->middleware('scope:read-general')->only(['index']);
-        $this->middleware('can:view,buyer')->only(['index']);
     }
     /**
      * Display a listing of the resource.
@@ -20,6 +19,8 @@ class BuyerCategoryController extends ApiController
      */
     public function index(Buyer $buyer)
     {
+        //Policy
+        $this->authorize('view', $buyer);          
         #Laravel Eloquent Eager Loading
         #Show me categories only. Use collapse() to show a unique collection of collections
         #Avoid repeated values and empty values

@@ -18,6 +18,8 @@ class BuyerSellerController extends ApiController
      */
     public function index(Buyer $buyer)
     {
+        $this->adminOrDie();
+        
         #Laravel Eloquent Eager Loading
         //$sellers = $buyer->transactions()->with('product.seller')->get();
         #Show me sellers only, avoid duplicated sellers and also empty values...

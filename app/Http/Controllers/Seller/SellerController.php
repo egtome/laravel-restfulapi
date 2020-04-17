@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Seller;
-use App\Seller;
 use App\Http\Controllers\ApiController;
+use App\Seller;
 use Illuminate\Http\Request;
 
 class SellerController extends ApiController
 {
     public function __construct() {
         parent::__construct();
-        $this->middleware('scope:read-general')->only(['show']);         
+        $this->middleware('scope:read-general')->only(['show']); 
+        $this->middleware('can:view,seller')->only(['show']);         
     }    
     /**
      * Display a listing of the resource.
@@ -18,6 +19,8 @@ class SellerController extends ApiController
      */
     public function index()
     {
+        $this->adminOrDie();
+        
         $sellers = Seller::has('products')->get();
         return $this->showAll($sellers);
     }
@@ -29,9 +32,19 @@ class SellerController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show(Seller $seller)
+    {       
+        $seller = Seller::has('products')->findOrFail($seller->id);
+        //Policy controller level
+        //$this->authorize('view', $seller);         
+        return $this->showOne($seller);
+    }
+    public function show2($id)
+    {       
         $seller = Seller::has('products')->findOrFail($id);
+        
+        //Policy controller level
+        $this->authorize('view', $seller);         
         return $this->showOne($seller);
     }
     

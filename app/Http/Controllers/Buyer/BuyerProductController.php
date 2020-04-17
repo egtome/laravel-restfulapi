@@ -10,8 +10,7 @@ class BuyerProductController extends ApiController
 {
     public function __construct() {
         parent::__construct();
-        $this->middleware('scope:read-general')->only(['index']);
-        $this->middleware('can:view,buyer')->only(['index']);        
+        $this->middleware('scope:read-general')->only(['index']);       
     }    
     /**
      * Display a listing of the resource.
@@ -20,6 +19,9 @@ class BuyerProductController extends ApiController
      */
     public function index(Buyer $buyer)
     {
+        //Policy
+        $this->authorize('view', $buyer);  
+        
         #Laravel Eloquent Eager Loading
         $products = $buyer->transactions()->with('product')->get()->pluck('product');
         return $this->showAll($products);

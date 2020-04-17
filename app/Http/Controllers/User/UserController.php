@@ -16,6 +16,9 @@ class UserController extends ApiController
         $this->middleware('auth:api')->except(['store','verify','resend']);        
         $this->middleware('transform.input:' . UserTransformer::class)->only(['store','update']);
         $this->middleware('scope:manage-account')->only(['show','update']);
+        $this->middleware('can:view,user')->only(['show']);
+        $this->middleware('can:update,user')->only(['update']);
+        $this->middleware('can:delete,user')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -24,6 +27,8 @@ class UserController extends ApiController
      */
     public function index()
     {
+        $this->adminOrDie();
+        
         $users = User::all();
         return $this->showAll($users);
     }
@@ -79,7 +84,7 @@ class UserController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
-    {
+    {        
         $updatedEmail = false;
         //$user = User::findOrFail($id);
         $rules = [
@@ -106,6 +111,7 @@ class UserController extends ApiController
         }
         
         if($request->has('admin')){
+            $this->adminOrDie();
             if(!$user->isVerified()){
                 return $this->errorResponse('Only verified users can set as admin', 409);
             }
@@ -144,6 +150,11 @@ class UserController extends ApiController
         $user->verification_token = null;
         $user->save();
         return $this->showMessage('User account verified');
+    }
+    
+    public function mySelf(Request $request){
+        $user = $request->user();
+        return $this->showOne($user);
     }
     
     public function resend(User $user){

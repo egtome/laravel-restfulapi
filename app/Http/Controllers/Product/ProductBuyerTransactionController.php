@@ -13,8 +13,7 @@ class ProductBuyerTransactionController extends ApiController
     public function __construct() {
         parent::__construct();
         $this->middleware('transform.input:' . TransactionTransformer::class)->only(['store']);
-        $this->middleware('scope:purchase-products')->only(['store']);
-        $this->middleware('can:purchase,buyer')->only(['store']);        
+        $this->middleware('scope:purchase-products')->only(['store']);       
     }        
     /**
      * Store a newly created resource in storage.
@@ -24,6 +23,9 @@ class ProductBuyerTransactionController extends ApiController
      */
     public function store(Request $request, Product $product, User $buyer)
     {
+        //Policy
+        $this->authorize('purchase', $buyer);          
+        
         $rules = [
             'quantity' => 'required|integer|min:1'
         ];
