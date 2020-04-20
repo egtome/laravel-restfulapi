@@ -1,5 +1,4 @@
 # RESTful API with Laravel 7 
-#
 >
 > REST API built with laravel 7
 > based on a project I built a few years ago
