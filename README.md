@@ -1,6 +1,5 @@
 # RESTful API with Laravel 7 
 #
-#
 >
 > REST API built with laravel 7
 > based on a project I built a few years ago
@@ -37,7 +36,6 @@
 ##### also, that's a good practice since that is used in development teams so everybody has the same environment, no matter what you are using in your local environment.
 
 #
-#
 ##### Versions
 - PHP 7.3.11
 - Laravel 7.3.0
@@ -73,7 +71,6 @@ php vendor/bin/homestead make
 ```
 ### Edit Homestead.yaml.
 #
-#
 ```
 ip: 192.168.10.14
 memory: 512
@@ -104,7 +101,6 @@ hostname: restfulapi
 
 ```
 ### SSH
-#
 #
 ```
 - cat ~/.ssh/id_rsa.pub
