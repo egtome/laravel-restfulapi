@@ -103,8 +103,9 @@ class Handler extends ExceptionHandler
             //Show all details in debug mode only
             return parent::render($request, $exception);            
         }else{
+            $message = !empty($exception->getMessage()) ? $exception->getMessage() : 'Unexpected exception, please contact support';
             //Production, at this point, no idea what happened, a good idea is trigger an urgent notification to support when this happens
-            return $this->errorResponse('Unexpected exception, please contact support', 500);
+            return $this->errorResponse($message, 500);
         }
     }
     
